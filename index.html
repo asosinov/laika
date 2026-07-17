@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laika — Distributed Compute Infrastructure</title>
+<meta name="description" content="Laika builds rapidly-deployable distributed compute infrastructure: megawatt-class power and liquid-cooled cabinets on your existing utility service. Bring your GPUs — we handle power, cooling, and service.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:title" content="Laika — Distributed Compute Infrastructure">
+<meta property="og:description" content="Megawatt-class power and liquid-cooled cabinets, deployed in weeks. Bring your GPUs.">
+<meta property="og:image" content="assets/hero-angle.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14141b;
+    --bg2:#191921;
+    --panel:#1e1e29;
+    --line:rgba(255,255,255,.09);
+    --text:#eaeaf2;
+    --muted:#a6a6ba;
+    --blue:#4a5be8;
+    --purple:#a45fe0;
+    --grad:linear-gradient(100deg,#4a5be8,#a45fe0);
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;line-height:1.12;font-weight:700;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:'Michroma',sans-serif;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+  .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* wordmark */
+  .wordmark{font-family:'Michroma',sans-serif;font-size:20px;letter-spacing:.08em;color:#fff}
+  .wordmark .ai{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* nav */
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(7,7,11,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .nav-links{display:flex;gap:34px;align-items:center;font-size:14.5px;color:var(--muted)}
+  .nav-links a:hover{color:#fff}
+  .btn{display:inline-block;padding:12px 26px;border-radius:999px;font-weight:600;font-size:15px;transition:transform .15s ease, box-shadow .15s ease}
+  .btn-grad{background:var(--grad);color:#fff;box-shadow:0 4px 24px rgba(105,92,232,.35)}
+  .btn-grad:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(105,92,232,.5)}
+  .btn-ghost{border:1px solid rgba(255,255,255,.22);color:#fff}
+  .btn-ghost:hover{border-color:rgba(255,255,255,.5)}
+  .nav-cta{padding:9px 20px;font-size:14px}
+
+  /* hero */
+  header{position:relative;padding:170px 0 90px;background:
+    radial-gradient(900px 480px at 78% 20%, rgba(74,91,232,.14), transparent 60%),
+    radial-gradient(700px 500px at 20% 80%, rgba(164,95,224,.10), transparent 60%),
+    var(--bg)}
+  header::before{content:"";position:absolute;inset:0;background-image:
+    linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+    background-size:56px 56px;mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 75%)}
+  .hero-grid{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+  .hero-copy h1{font-size:clamp(38px,5.2vw,62px);margin:20px 0 22px}
+  .hero-copy p{font-size:19px;color:var(--muted);max-width:560px}
+  .hero-ctas{display:flex;gap:16px;margin-top:36px;flex-wrap:wrap}
+  .hero-img{position:relative}
+  .hero-img img{width:100%;max-width:520px;margin:0 auto;filter:drop-shadow(0 30px 60px rgba(0,0,0,.6))}
+  .hero-img::after{content:"";position:absolute;left:10%;right:10%;bottom:-6%;height:60px;background:radial-gradient(ellipse at center, rgba(105,92,232,.25), transparent 70%);filter:blur(12px)}
+  .hero-img img.hero-dog{position:absolute;right:-26px;top:-96px;width:170px;opacity:.13;transform:rotate(8deg);pointer-events:none;filter:none}
+
+  /* stat strip */
+  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+  .stats-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:1px}
+  .stat{padding:30px 20px;text-align:center}
+  .stat b{display:block;font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat span{font-size:13.5px;color:var(--muted);letter-spacing:.04em}
+
+  section{padding:104px 0}
+  .sec-head{max-width:720px;margin-bottom:56px}
+  .sec-head h2{font-size:clamp(30px,3.6vw,44px);margin-top:18px}
+  .sec-head p{color:var(--muted);margin-top:16px;font-size:18px}
+
+  /* problem */
+  .problem{background:var(--bg)}
+  .problem-quote{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,3.2vw,40px);font-weight:600;line-height:1.25;max-width:880px}
+  .problem-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px}
+  .problem-col{border-left:2px solid transparent;border-image:var(--grad) 1;padding-left:22px}
+  .problem-col h3{font-size:18px;margin-bottom:8px}
+  .problem-col p{font-size:15.5px;color:var(--muted)}
+
+  /* how it works */
+  .how{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;position:relative;overflow:hidden;transition:transform .2s ease,border-color .2s ease}
+  .step:hover{transform:translateY(-4px);border-color:rgba(120,100,235,.45)}
+  .step-num{font-family:'Michroma',sans-serif;font-size:13px;letter-spacing:.2em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:18px}
+  .step h3{font-size:21px;margin-bottom:12px}
+  .step p{font-size:15.5px;color:var(--muted)}
+  .byo{margin-top:28px;background:linear-gradient(100deg,rgba(74,91,232,.12),rgba(164,95,224,.12));border:1px solid rgba(120,100,235,.35);border-radius:var(--radius);padding:26px 30px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .byo b{font-family:'Space Grotesk',sans-serif;font-size:18px}
+  .byo span{color:var(--muted);font-size:15.5px}
+
+  /* platform */
+  .platform-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center}
+  .platform-img img{width:100%;max-width:460px;filter:drop-shadow(0 24px 48px rgba(0,0,0,.55))}
+  .spec-block{border-bottom:1px solid var(--line);padding:26px 0}
+  .spec-block:first-child{border-top:1px solid var(--line)}
+  .spec-block h3{font-size:19px;display:flex;align-items:center;gap:12px}
+  .spec-block h3 .tag{font-family:'Michroma',sans-serif;font-size:9.5px;letter-spacing:.2em;padding:5px 10px;border-radius:6px;background:rgba(120,100,235,.16);border:1px solid rgba(120,100,235,.4);color:#c9c2f5}
+  .spec-block ul{list-style:none;margin-top:12px;display:grid;gap:7px}
+  .spec-block li{font-size:15px;color:var(--muted);padding-left:20px;position:relative}
+  .spec-block li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:2px;background:var(--grad)}
+
+  /* grid-to-chip stack */
+  .stack{display:grid;gap:8px;max-width:980px}
+  .layer{display:grid;grid-template-columns:64px 200px 1fr auto;gap:18px;align-items:center;padding:16px 22px;border-radius:10px;background:var(--panel);border:1px solid var(--line)}
+  .layer .lnum{font-family:'Michroma',sans-serif;font-size:13px;color:var(--muted)}
+  .layer .lname{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16.5px}
+  .layer .ldesc{font-size:14px;color:var(--muted)}
+  .layer .ltag{font-family:'Michroma',sans-serif;font-size:10px;letter-spacing:.18em;white-space:nowrap;color:var(--muted)}
+  .laika-band{position:relative;border:1px solid transparent;border-radius:14px;background:
+    linear-gradient(var(--bg2),var(--bg2)) padding-box,
+    var(--grad) border-box;padding:30px 8px 8px;display:grid;gap:8px;margin:4px 0}
+  .laika-band::before{content:"LAIKA DCI · ONE FACTORY-BUILT PRODUCT";position:absolute;top:-11px;left:22px;font-family:'Michroma',sans-serif;font-size:10px;letter-spacing:.2em;padding:4px 14px;border-radius:999px;background:var(--grad);color:#fff}
+  .laika-band .layer{background:rgba(120,100,235,.10);border-color:rgba(120,100,235,.30)}
+  .laika-band .ltag{color:#c9c2f5}
+  .layer.yours{border-color:rgba(255,255,255,.2)}
+  .layer.yours .ltag{color:#fff}
+  .layer.bypassed{opacity:.75;border-style:dashed;border-color:rgba(224,160,80,.4)}
+  .layer.bypassed .ltag{color:#e0a050}
+  .stack-note{margin-top:30px;max-width:820px;font-size:17px;color:var(--muted)}
+  .stack-note b{color:#fff}
+
+  /* deployment banner */
+  .banner{position:relative;min-height:520px;background:url('assets/banner-aerial.webp') center/cover no-repeat;display:flex;align-items:flex-end}
+  .banner::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(20,20,27,.25) 30%,rgba(20,20,27,.3) 60%,var(--bg) 100%)}
+  .banner-copy{position:relative;padding:80px 0 70px}
+  .banner-copy .eyebrow{color:#cfcfe2}
+  .banner-copy h2{font-size:clamp(26px,3.4vw,40px);max-width:720px;margin-top:14px;text-shadow:0 2px 24px rgba(0,0,0,.7)}
+  .banner-copy p{color:#d5d5e4;max-width:600px;margin-top:12px;text-shadow:0 1px 12px rgba(0,0,0,.8)}
+
+  /* inside gallery */
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .g-tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .2s ease,border-color .2s ease}
+  .g-tile:hover{transform:translateY(-4px);border-color:rgba(120,100,235,.45)}
+  .g-tile img{width:100%;height:340px;object-fit:cover;object-position:center top}
+  .g-tile .g-cap{padding:20px 22px}
+  .g-tile .g-cap b{font-family:'Space Grotesk',sans-serif;font-size:17px;display:block}
+  .g-tile .g-cap span{font-size:14px;color:var(--muted)}
+
+  /* comparison */
+  .compare{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+  th,td{padding:20px 24px;text-align:left;font-size:15.5px}
+  thead th{font-family:'Space Grotesk',sans-serif;font-size:16px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line)}
+  thead th:first-child{color:transparent;background-clip:text;-webkit-background-clip:text;background-image:var(--grad);background-color:rgba(255,255,255,.03)}
+  tbody tr{border-bottom:1px solid var(--line)}
+  tbody tr:last-child{border-bottom:none}
+  td.dim{color:var(--muted);font-size:13.5px;font-family:'Michroma',sans-serif;letter-spacing:.12em;text-transform:uppercase}
+  td.laika{color:#fff;font-weight:600}
+  td.trad{color:var(--muted)}
+
+  /* audiences */
+  .aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .aud{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;transition:transform .2s ease,border-color .2s ease}
+  .aud:hover{transform:translateY(-4px);border-color:rgba(120,100,235,.45)}
+  .aud h3{font-size:20px;margin-bottom:12px}
+  .aud p{font-size:15.5px;color:var(--muted)}
+  .aud .icon{width:44px;height:44px;border-radius:10px;background:linear-gradient(120deg,rgba(74,91,232,.25),rgba(164,95,224,.25));border:1px solid rgba(120,100,235,.4);display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:20px}
+
+  /* heritage */
+  .heritage{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .her-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+  .her-grid img{width:100%;max-width:440px;margin:0 auto;filter:drop-shadow(0 24px 48px rgba(0,0,0,.55))}
+  .her-points{display:grid;gap:22px;margin-top:34px}
+  .her-point{display:flex;gap:16px;align-items:flex-start}
+  .her-point .dot{margin-top:9px;width:10px;height:10px;border-radius:3px;background:var(--grad);flex-shrink:0}
+  .her-point b{display:block;font-family:'Space Grotesk',sans-serif;font-size:17px}
+  .her-point span{color:var(--muted);font-size:15px}
+
+  /* cta */
+  .cta{position:relative;text-align:center;padding:130px 0;overflow:hidden}
+  .cta::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 50% 60%, rgba(105,92,232,.18), transparent 70%)}
+  .cta .dog{width:110px;margin:0 auto 30px;opacity:.9}
+  .cta h2{font-size:clamp(30px,4vw,48px);position:relative}
+  .cta p{color:var(--muted);margin:18px auto 40px;max-width:520px;position:relative}
+  .cta .email{display:block;margin-top:22px;color:var(--muted);font-size:15px}
+  .cta .email a{color:#c9c2f5}
+
+  footer{border-top:1px solid var(--line);padding:36px 0;background:var(--bg)}
+  .foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:13.5px}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:900px){
+    .hero-grid,.platform-grid,.her-grid{grid-template-columns:1fr}
+    .hero-img{order:-1}
+    .hero-img img{max-width:340px}
+    .steps,.problem-cols,.aud-grid{grid-template-columns:1fr}
+    .stats-inner{grid-template-columns:repeat(2,1fr)}
+    .nav-links a:not(.btn){display:none}
+    header{padding-top:130px}
+    section{padding:72px 0}
+    th,td{padding:14px 12px;font-size:14px}
+    td.dim{font-size:11px}
+    .layer{grid-template-columns:40px 1fr auto;gap:10px;padding:14px 16px}
+    .layer .ldesc{display:none}
+    .layer .lname{font-size:15px}
+    .gallery{grid-template-columns:1fr}
+    .banner{min-height:380px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <a href="#" class="wordmark">L<span class="ai">AI</span>KA</a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#platform">Platform</a>
+      <a href="#who">Who it's for</a>
+      <a class="btn btn-grad nav-cta" href="mailto:arcady@laikadc.com?subject=Laika%20DCI%20Inquiry">Get in touch</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">Distributed Compute Infrastructure</div>
+      <h1>Power and cooling, <span class="grad-text">solved.</span><br>Bring your GPUs.</h1>
+      <p>Laika builds megawatt-class power infrastructure and liquid-cooled cabinets that deploy on your existing utility service in weeks — not years. You slot in your compute. We keep it running.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-grad" href="mailto:arcady@laikadc.com?subject=Laika%20DCI%20Inquiry">Talk to us</a>
+        <a class="btn btn-ghost" href="#platform">Explore the platform</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <img src="assets/hero-dog.png" alt="" class="hero-dog" aria-hidden="true">
+      <img src="assets/hero-angle.webp" alt="Laika DCI — modular distributed compute infrastructure cabinet system">
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="wrap stats-inner">
+    <div class="stat"><b>0.8–3.2 MW</b><span>modular power blocks</span></div>
+    <div class="stat"><b>9.6 MW</b><span>on a paralleled DC bus</span></div>
+    <div class="stat"><b>800–950 V</b><span>DC output</span></div>
+    <div class="stat"><b>N+1 / 2N</b><span>selectable redundancy</span></div>
+  </div>
+</div>
+
+<section class="problem">
+  <div class="wrap">
+    <div class="eyebrow reveal">The problem</div>
+    <p class="problem-quote reveal" style="margin-top:22px">The bottleneck in AI isn't GPUs or silicon.<br>It's <span class="grad-text">power infrastructure.</span></p>
+    <div class="problem-cols">
+      <div class="problem-col reveal">
+        <h3>Interconnect queues</h3>
+        <p>New medium-voltage utility service means multi-year queues, permitting marathons, and construction before a single rack powers on.</p>
+      </div>
+      <div class="problem-col reveal">
+        <h3>Stranded capital</h3>
+        <p>GPUs depreciate while datacenter buildouts crawl. Every month of delay is compute you paid for and can't run.</p>
+      </div>
+      <div class="problem-col reveal">
+        <h3>Cooling that can't keep up</h3>
+        <p>Rack-scale AI systems demand liquid cooling and dense DC power that legacy colo and enterprise server rooms were never built for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="stack">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow reveal">Grid → Chip</div>
+      <h2 class="reveal">Seven layers sit between<br>the grid and your GPUs</h2>
+      <p class="reveal">The middle of the stack is where schedules die — and no single vendor lives there. Laika ships it as one product.</p>
+    </div>
+    <div class="stack reveal">
+      <div class="layer yours">
+        <span class="lnum">L7</span><span class="lname">Compute</span>
+        <span class="ldesc">GPU racks · networking · storage</span>
+        <span class="ltag">YOURS · BYO</span>
+      </div>
+      <div class="laika-band">
+        <div class="layer">
+          <span class="lnum">L6</span><span class="lname">Thermal capture</span>
+          <span class="ldesc">CDU · liquid cooling loop to the racks</span>
+          <span class="ltag">LAIKA</span>
+        </div>
+        <div class="layer">
+          <span class="lnum">L5</span><span class="lname">DC distribution</span>
+          <span class="ldesc">800–950 VDC bus · rack distribution absorbed</span>
+          <span class="ltag">LAIKA</span>
+        </div>
+        <div class="layer">
+          <span class="lnum">L4</span><span class="lname">Conversion + ride-through</span>
+          <span class="ldesc">AC/DC on silicon carbide · UPS function built in</span>
+          <span class="ltag">LAIKA</span>
+        </div>
+        <div class="layer">
+          <span class="lnum">L3</span><span class="lname">Storage interface</span>
+          <span class="ldesc">DC-coupled battery port · bidirectional, no extra PCS</span>
+          <span class="ltag">LAIKA</span>
+        </div>
+      </div>
+      <div class="layer">
+        <span class="lnum">L2</span><span class="lname">Generation</span>
+        <span class="ldesc">turbines · gensets · fuel cells</span>
+        <span class="ltag">PARTNERS</span>
+      </div>
+      <div class="layer bypassed">
+        <span class="lnum">L1</span><span class="lname">Grid interconnect</span>
+        <span class="ldesc">transformer · MV switchgear · the multi-year queue</span>
+        <span class="ltag">DEFERRED</span>
+      </div>
+    </div>
+    <p class="stack-note reveal"><b>Laika DCI delivers L3–L6 as one factory-built product</b> — starting on your existing low-voltage service, so the interconnect queue doesn't gate your first deployment. Scale further with service upgrades or on-site generation when you need them.</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow reveal">How it works</div>
+      <h2 class="reveal">Turnkey infrastructure.<br>Your silicon.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01 — WE DEPLOY</div>
+        <h3>Factory-built, landed in weeks</h3>
+        <p>Laika manufactures the complete system — power conversion, switchgear, and liquid-cooled cabinets with power pre-routed — and lands it on your existing low-voltage utility service. No new interconnect required to get started. No construction project.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02 — YOU SLOT IN</div>
+        <h3>Bring your own compute</h3>
+        <p>Slide standard trays into pre-provisioned slots: your GPUs, your CPUs, your memory. DC power and liquid cooling are already at the cabinet, ready for rack-scale AI systems.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03 — WE OPERATE</div>
+        <h3>Serviced end to end</h3>
+        <p>Laika monitors, maintains, and services the infrastructure for the life of the deployment — with uptime guarantees and hardware refresh paths built in.</p>
+      </div>
+    </div>
+    <div class="byo reveal">
+      <b>BYO-GPU by design.</b>
+      <span>Own your silicon and your data. Laika owns the hard part — power, cooling, and the service relationship.</span>
+    </div>
+  </div>
+</section>
+
+<div class="banner">
+  <div class="wrap banner-copy">
+    <div class="eyebrow">Deployed, not constructed</div>
+    <h2>Megawatts landed beside an existing facility — deployed in weeks, not years</h2>
+    <p>A Laika deployment starts on the utility service you already have and scales block by block — pairing with on-site generation and storage as your power needs grow.</p>
+  </div>
+</div>
+
+<section id="platform">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow reveal">The platform</div>
+      <h2 class="reveal">The Laika <span class="grad-text">DCI</span></h2>
+      <p class="reveal">A modular, rapidly-deployable datacenter engineered for next-generation rack-scale AI. Three integrated subsystems, one factory-built product.</p>
+    </div>
+    <div class="platform-grid">
+      <div class="platform-img reveal">
+        <img src="assets/front.webp" alt="Laika DCI front view — gateway, inverter, and liquid-cooled compute cabinets">
+      </div>
+      <div>
+        <div class="spec-block reveal">
+          <h3>Gateway <span class="tag">POWER IN</span></h3>
+          <ul>
+            <li>AC and DC switchboard on existing 400/480&nbsp;V 3-phase LV utility service</li>
+            <li>DC-coupled battery energy storage ready</li>
+            <li>Accepts on-site generation: solar, hydrogen, natural gas, diesel</li>
+          </ul>
+        </div>
+        <div class="spec-block reveal">
+          <h3>Power Cabinets <span class="tag">CONVERSION</span></h3>
+          <ul>
+            <li>800&nbsp;kW per power cabinet at 800–950&nbsp;VDC — pair four for 3.2&nbsp;MW to the compute cabinets</li>
+            <li>Scale to 9.6&nbsp;MW by paralleling the DC bus</li>
+            <li>High-frequency silicon-carbide switching, liquid-cooled power modules</li>
+            <li>Run cabinets at 800&nbsp;kW for N+1 redundancy — or at 400&nbsp;kW for full 2N</li>
+            <li>Integrated CDU on top of each cabinet drives the liquid cooling loop</li>
+          </ul>
+        </div>
+        <div class="spec-block reveal">
+          <h3>Cabinets <span class="tag">COMPUTE</span></h3>
+          <ul>
+            <li>Liquid-cooled IT cabinets with DC power pre-routed to every slot</li>
+            <li>Expandable up to six racks per power block</li>
+            <li>Ready for NVL72-class rack systems (GB200 / GB300), engineered ahead for next-gen 800&nbsp;VDC platforms</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow reveal">Inside the machine</div>
+      <h2 class="reveal">Engineered to the busbar</h2>
+    </div>
+    <div class="gallery">
+      <div class="g-tile reveal">
+        <img src="assets/cad-gateway.webp" alt="Inside the Laika Gateway — busbars, protection, and switchgear">
+        <div class="g-cap"><b>Gateway</b><span>AC/DC switchboard, protection, and metering — the single point of connection to your service.</span></div>
+      </div>
+      <div class="g-tile reveal">
+        <img src="assets/cad-inverter-front.webp" alt="Laika power cabinet — liquid-cooled power module trays">
+        <div class="g-cap"><b>Power modules</b><span>Modular, liquid-cooled SiC conversion trays — redundancy built into every cabinet.</span></div>
+      </div>
+      <div class="g-tile reveal">
+        <img src="assets/cdu.webp" alt="Cooling distribution unit mounted on top of a Laika power cabinet">
+        <div class="g-cap"><b>CDU</b><span>The cooling distribution unit rides on top of each power cabinet — radiators, pumps, and the liquid loop to your racks.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="compare">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow reveal">Why it wins</div>
+      <h2 class="reveal">DCI vs. the traditional datacenter</h2>
+    </div>
+    <div class="reveal" style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr><th style="width:26%">LAIKA</th><th style="width:37%">Laika DCI</th><th style="width:37%">Traditional datacenter</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="dim">Deployment</td><td class="laika">Several weeks</td><td class="trad">Several years</td></tr>
+          <tr><td class="dim">Utility service</td><td class="laika">Starts on existing low-voltage service</td><td class="trad">New medium-voltage interconnect required</td></tr>
+          <tr><td class="dim">Integration</td><td class="laika">Turnkey, fully integrated from the factory</td><td class="trad">Complex on-site integration and testing</td></tr>
+          <tr><td class="dim">Compute</td><td class="laika">Bring your own GPU, CPU &amp; memory</td><td class="trad">Locked to operator hardware or long colo terms</td></tr>
+          <tr><td class="dim">Workloads</td><td class="laika">Sovereign, dedicated, on-prem</td><td class="trad">General multi-tenant</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="who">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow reveal">Who it's for</div>
+      <h2 class="reveal">Built for teams that can't wait<br>— or can't send data out</h2>
+    </div>
+    <div class="aud-grid">
+      <div class="aud reveal">
+        <div class="icon">⚡</div>
+        <h3>Neoclouds</h3>
+        <p>Stand up revenue-generating capacity without land deals, interconnect queues, or a construction org. Your GPUs earn from week one — and scale block by block.</p>
+      </div>
+      <div class="aud reveal">
+        <div class="icon">🛡</div>
+        <h3>On-prem &amp; sovereign AI</h3>
+        <p>Inference and training for finance, healthcare, energy, and defense — where data can never leave the building and a public API is a non-starter.</p>
+      </div>
+      <div class="aud reveal">
+        <div class="icon">📍</div>
+        <h3>Low-latency edge</h3>
+        <p>Dedicated compute sited next to the workload, for applications where the round trip to a distant datacenter is disqualifying.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="heritage">
+  <div class="wrap her-grid">
+    <div>
+      <div class="eyebrow reveal">Why Laika</div>
+      <h2 class="reveal" style="font-size:clamp(28px,3.4vw,42px);margin-top:18px">Two decades of power infrastructure, productized</h2>
+      <div class="her-points">
+        <div class="her-point reveal"><div class="dot"></div><div><b>Power-first pedigree</b><span>Built on twenty years of designing, manufacturing, deploying, and servicing high-power infrastructure across the globe.</span></div></div>
+        <div class="her-point reveal"><div class="dot"></div><div><b>Factory-built in the USA</b><span>Manufactured and integrated in-house, then shipped as a finished product — not assembled in your parking lot.</span></div></div>
+        <div class="her-point reveal"><div class="dot"></div><div><b>Global service operations</b><span>A worldwide field-service network stands behind every deployment, with uptime commitments and refresh paths.</span></div></div>
+      </div>
+    </div>
+    <div class="reveal"><img src="assets/fleet-wall.webp" alt="A row of Laika DCI units deployed along an existing facility wall" style="border-radius:14px;border:1px solid rgba(255,255,255,.1)"></div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="wrap">
+    <img class="dog reveal" src="assets/hero-dog.png" alt="Laika mascot — dog in a spacesuit">
+    <h2 class="reveal">Ready to deploy at the speed<br>of your <span class="grad-text">ambition?</span></h2>
+    <p class="reveal">Tell us about your workload, your site, and your timeline. We'll come back with a deployment plan measured in weeks.</p>
+    <a class="btn btn-grad reveal" href="mailto:arcady@laikadc.com?subject=Laika%20DCI%20Inquiry" style="font-size:17px;padding:16px 40px">Get in touch</a>
+    <span class="email reveal">or write to us directly — <a href="mailto:arcady@laikadc.com">arcady@laikadc.com</a></span>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span class="wordmark" style="font-size:15px">L<span class="ai">AI</span>KA</span>
+    <span>© 2026 Laika Distributed Compute Corporation. All rights reserved.</span>
+    <span>laikadc.com</span>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
